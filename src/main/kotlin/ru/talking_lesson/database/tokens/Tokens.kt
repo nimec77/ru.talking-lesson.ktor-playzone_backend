@@ -2,6 +2,7 @@ package ru.talking_lesson.database.tokens
 
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Tokens: Table("tokens") {
@@ -16,6 +17,22 @@ object Tokens: Table("tokens") {
         it[login] = tokenDTO.login
         it[token] = tokenDTO.token
       }
+    }
+  }
+
+  fun fetchToken(token: String): TokenDTO? {
+    return try {
+      transaction {
+        Tokens.select { Tokens.token eq token }.map {
+          TokenDTO(
+            rowId = it[Tokens.id],
+            login = it[login],
+            token = it[Tokens.token]
+          )
+        }.first()
+      }
+    } catch (e: Exception) {
+      null
     }
   }
 }

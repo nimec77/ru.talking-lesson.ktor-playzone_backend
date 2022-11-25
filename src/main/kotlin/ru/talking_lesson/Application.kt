@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.cio.*
 import org.jetbrains.exposed.sql.Database
+import ru.talking_lesson.features.games.configureGamesRouting
 import ru.talking_lesson.features.login.configureLoginRouting
 import ru.talking_lesson.features.register.configureRegisterRouting
 import ru.talking_lesson.plugins.*
@@ -24,4 +25,5 @@ fun Application.module() {
   configureSerialization()
   configureLoginRouting()
   configureRegisterRouting()
+  configureGamesRouting()
 }

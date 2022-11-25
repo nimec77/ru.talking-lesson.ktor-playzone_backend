@@ -2,6 +2,7 @@ package ru.talking_lesson.database.games
 
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -31,19 +32,23 @@ object Games : Table("games") {
   }
 
   fun fetchGamesByName(gameName: String): List<GameDTO> {
-    return transaction {
-      Games.select { name like gameName }.map {
-        GameDTO(
-          gameId = it[gameId],
-          name = it[name],
-          backdrop = it[backdrop],
-          logo = it[logo],
-          description = it[description],
-          downloadCount = it[downloadCount],
-          version = it[version],
-          size = it[size]
-        )
+    return try {
+      transaction {
+        Games.select { name.lowerCase() like "%$gameName%".lowercase() }.map {
+          GameDTO(
+            gameId = it[gameId],
+            name = it[name],
+            backdrop = it[backdrop],
+            logo = it[logo],
+            description = it[description],
+            downloadCount = it[downloadCount],
+            version = it[version],
+            size = it[size]
+          )
+        }
       }
+    } catch (e: Exception) {
+      emptyList()
     }
   }
 }

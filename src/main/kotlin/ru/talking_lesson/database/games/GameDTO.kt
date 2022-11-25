@@ -34,3 +34,11 @@ fun GameDTO.mapToCreateGameResponse() = CreateGameResponse(
   version = version,
   size = size,
 )
+
+fun GameDTO.mapToGameResponse() = GameResponse(
+  gameId = gameId,
+  name = name,
+  description = description,
+  version = version,
+  size = size,
+)

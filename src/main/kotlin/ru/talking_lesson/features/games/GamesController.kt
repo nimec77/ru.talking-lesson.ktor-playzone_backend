@@ -5,28 +5,35 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import ru.talking_lesson.database.games.Games
+import ru.talking_lesson.database.games.mapToCreateGameResponse
 import ru.talking_lesson.database.games.mapToGameDTO
+import ru.talking_lesson.database.games.mapToGameResponse
 import ru.talking_lesson.features.games.models.*
 import ru.talking_lesson.utils.TokenCheck
 
-class GamesController(private val call:ApplicationCall) {
+class GamesController(private val call: ApplicationCall) {
 
   suspend fun performSearch() {
     val request = call.receive<FetchGameRequest>()
-    val token = call.request.headers["Bearer-Authorization"]
+    val token = call.request.headers["Authorization"]?.substring(7)
 
     if (TokenCheck.isTokenValid(token.orEmpty()) || TokenCheck.isTokenAdmin(token.orEmpty())) {
-      call.respond(Games.fetchGamesByName(request.searchQuery))
+      call.respond(
+        FetchGameResponse(
+          games = Games.fetchGamesByName(request.searchQuery).map { it.mapToGameResponse() })
+      )
     } else {
       call.respond(HttpStatusCode.Unauthorized, "Token expired")
     }
   }
 
   suspend fun createGame() {
-    val token = call.request.headers["Bearer-Authorization"]
+    val token = call.request.headers["Authorization"]?.substring(7)
     if (TokenCheck.isTokenAdmin(token.orEmpty())) {
       val request = call.receive<CreateGameRequest>()
       val game = request.mapToGameDTO()
+      Games.insert(game)
+      call.respond(game.mapToCreateGameResponse())
     } else {
       call.respond(HttpStatusCode.Unauthorized, "Token expired")
     }

@@ -6,12 +6,12 @@ import io.ktor.server.routing.*
 fun Application.configureGamesRouting() {
 
   routing {
-    post("/games/fetch") {
+    post("/games/search") {
       val gamesController = GamesController(call)
       gamesController.performSearch()
     }
 
-    post("/games/add") {
+    post("/games/create") {
       val gamesController = GamesController(call)
       gamesController.createGame()
     }
