@@ -24,34 +24,21 @@ class ApplicationTest {
     }
   }
 
-    @Test
-    fun testGamesSearch() = testApplication {
-        install(ContentNegotiation) {
-            json()
-        }
-        application {
-            configureGamesRouting()
-        }
-        client.post("/games/search") {
-            contentType(ContentType.Application.Json)
-            setBody(FetchGameRequest(searchQuery = "test"))
-        }.apply {
-            assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello, World!", bodyAsText())
-        }
+  @Test
+  fun testGamesSearch() = testApplication {
+    install(ContentNegotiation) {
+      json()
     }
+    application {
+      configureGamesRouting()
+    }
+    client.post("/games/search") {
+      contentType(ContentType.Application.Json)
+      setBody(FetchGameRequest(searchQuery = "test"))
+    }.apply {
+      assertEquals(HttpStatusCode.OK, status)
+      assertEquals("Hello, World!", bodyAsText())
+    }
+  }
 
-//  @Test
-//  fun testGamesSearch() = testApplication {
-//    val client = createClient {
-//      install(ContentNegotiation) {
-//        json()
-//      }
-//    }
-//    val response = client.post("/games/search") {
-//      contentType(ContentType.Application.Json)
-//      setBody(FetchGameRequest(searchQuery = "test"))
-//    }
-//    assertEquals(HttpStatusCode.OK, response.status)
-//  }
 }

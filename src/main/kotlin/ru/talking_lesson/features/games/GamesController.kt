@@ -15,7 +15,7 @@ class GamesController(private val call: ApplicationCall) {
 
   suspend fun performSearch() {
     val request = call.receive<FetchGameRequest>()
-    val token = call.request.headers["Authorization"]?.substring(7)
+    val token = call.request.headers["Bearer-Authorization"]
 
     if (TokenCheck.isTokenValid(token.orEmpty()) || TokenCheck.isTokenAdmin(token.orEmpty())) {
       call.respond(
@@ -28,7 +28,7 @@ class GamesController(private val call: ApplicationCall) {
   }
 
   suspend fun createGame() {
-    val token = call.request.headers["Authorization"]?.substring(7)
+    val token = call.request.headers["Bearer-Authorization"]
     if (TokenCheck.isTokenAdmin(token.orEmpty())) {
       val request = call.receive<CreateGameRequest>()
       val game = request.mapToGameDTO()
