@@ -34,7 +34,12 @@ object Games : Table("games") {
   fun fetchGamesByName(gameName: String): List<GameDTO> {
     return try {
       transaction {
-        Games.select { name.lowerCase() like "%$gameName%".lowercase() }.map {
+        val searchString = if (gameName.trim().isEmpty()) {
+          "%"
+        } else {
+          "%$gameName%".lowercase()
+        }
+        Games.select { name.lowerCase() like searchString }.map {
           GameDTO(
             gameId = it[gameId],
             name = it[name],
