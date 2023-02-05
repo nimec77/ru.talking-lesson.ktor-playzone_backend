@@ -21,12 +21,14 @@ class RegisterController(private val call: ApplicationCall) {
     if (isUserExist) {
       call.respond(HttpStatusCode.Conflict, "User already exist")
     } else {
-      Users.insert(UserDTO(
-        login = registerResponseRemote.login,
-        password = registerResponseRemote.password,
-        userName = "",
-        email = registerResponseRemote.email
-      ))
+      Users.insert(
+        UserDTO(
+          login = registerResponseRemote.login,
+          password = registerResponseRemote.password,
+          userName = "",
+          email = registerResponseRemote.email
+        )
+      )
       val token = UUID.randomUUID().toString()
       Tokens.insert(
         tokenDTO = TokenDTO(

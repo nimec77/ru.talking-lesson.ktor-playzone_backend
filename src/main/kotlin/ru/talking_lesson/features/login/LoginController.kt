@@ -9,7 +9,7 @@ import ru.talking_lesson.database.tokens.Tokens
 import ru.talking_lesson.database.users.Users
 import java.util.*
 
-class LoginController(private val  call: ApplicationCall) {
+class LoginController(private val call: ApplicationCall) {
   suspend fun performLogin() {
     val receive = call.receive<LoginReceiveRemote>()
     val userDTO = Users.fetchUser(receive.login)

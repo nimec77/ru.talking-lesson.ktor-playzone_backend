@@ -19,8 +19,7 @@ class GamesController(private val call: ApplicationCall) {
 
     if (TokenCheck.isTokenValid(token.orEmpty()) || TokenCheck.isTokenAdmin(token.orEmpty())) {
       call.respond(
-        FetchGameResponse(
-          games = Games.fetchGamesByName(request.searchQuery).map { it.mapToGameResponse() })
+        Games.fetchGamesByName(request.searchQuery).map { it.mapToGameResponse() }
       )
     } else {
       call.respond(HttpStatusCode.Unauthorized, "Token expired")
